@@ -46,7 +46,11 @@ $collector = $block->getCollector();
                 <span class="badge"><?= count($collector->getDuplicatedQueries()); ?></span>
             </h3>
             <div class="tab-content">
-                <?= /* @noEscape */ $viewModel->renderQueryList($collector->getDuplicatedQueries(), $collector->getQueryTraces()); ?>
+                <?= /* @noEscape */ $viewModel->renderQueryList(
+                    $collector->getDuplicatedQueries(),
+                    $collector->getQueryTraces(),
+                    $collector->getDuplicatedQueryCounts()
+                ); ?>
             </div>
         </div>
     <?php endif; ?>

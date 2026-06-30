@@ -15,7 +15,8 @@ class QueryListRenderer implements RendererInterface
         private \Magento\Framework\Math\Random $mathRandom,
         private \ClawRock\Debug\Model\View\Renderer\QueryRendererFactory $queryRendererFactory,
         private \ClawRock\Debug\Helper\Formatter $formatter,
-        private array $traces = []
+        private array $traces = [],
+        private array $counts = []
     ) {
     }
 
@@ -30,6 +31,7 @@ class QueryListRenderer implements RendererInterface
                     'template' => self::TEMPLATE,
                     'queries' => $this->queries,
                     'traces' => $this->traces,
+                    'counts' => $this->counts,
                     'query_renderer' => $this->queryRendererFactory,
                     'prefix' => $this->mathRandom->getUniqueHash(),
                     'formatter' => $this->formatter,

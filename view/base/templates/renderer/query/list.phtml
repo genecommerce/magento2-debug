@@ -7,12 +7,16 @@ declare(strict_types=1);
  */
 $prefix = $block->getPrefix();
 $rowNumber = 0;
+$counts = $block->getCounts() ?? [];
 ?>
 <table class="alt queries-table">
     <thead>
         <tr>
             <th class="nowrap">#</th>
             <th class="nowrap"><?= $escaper->escapeHtml(__('Time')) ?></th>
+            <?php if ($counts): ?>
+                <th class="nowrap"><?= $escaper->escapeHtml(__('Count')) ?></th>
+            <?php endif; ?>
             <th style="width: 100%;"><?= $escaper->escapeHtml(__('Info')) ?></th>
         </tr>
     </thead>
@@ -24,6 +28,9 @@ $rowNumber = 0;
                 <td class="nowrap">
                     <?= /* @noEscape */ $block->getFormatter()->microtime($query->getElapsedSecs()); ?> ms
                 </td>
+                <?php if ($counts): ?>
+                    <td class="nowrap"><?= /* @noEscape */ $counts[$queryId] ?? '-' ?></td>
+                <?php endif; ?>
                 <td>
                     <?= /* @noEscape */ $block->getQueryRenderer()->create([
                         'query' => $query,

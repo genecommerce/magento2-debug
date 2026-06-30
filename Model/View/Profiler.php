@@ -57,11 +57,12 @@ class Profiler implements ArgumentInterface
         return $this->queryRendererFactory->create(['query' => $query])->render();
     }
 
-    public function renderQueryList(array $queries, array $traces = []): string
+    public function renderQueryList(array $queries, array $traces = [], array $counts = []): string
     {
         return $this->queryListRendererFactory->create([
             'queries' => $queries,
             'traces' => $traces,
+            'counts' => $counts,
         ])->render();
     }
 
