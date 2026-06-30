@@ -14,7 +14,9 @@ class QueryRenderer implements RendererInterface
         private \Magento\Framework\View\LayoutInterface $layout,
         private \Magento\Framework\Math\Random $mathRandom,
         private \ClawRock\Debug\Model\View\Renderer\VarRenderer $varRenderer,
-        private \ClawRock\Debug\Helper\Database $databaseHelper
+        private \ClawRock\Debug\Model\View\Renderer\TraceRendererFactory $traceRendererFactory,
+        private \ClawRock\Debug\Helper\Database $databaseHelper,
+        private array $trace = []
     ) {
     }
 
@@ -36,6 +38,7 @@ class QueryRenderer implements RendererInterface
                             $this->query->getQueryParams()
                         )
                     ),
+                    'trace_html' => $this->getTraceHtml(),
                     'var_renderer' => $this->varRenderer,
                     'uniq_id' => $this->mathRandom->getUniqueHash(),
                 ],
@@ -43,5 +46,16 @@ class QueryRenderer implements RendererInterface
         );
 
         return $block->toHtml();
+    }
+
+    private function getTraceHtml(): string
+    {
+        if (empty($this->trace)) {
+            return '';
+        }
+
+        return $this->traceRendererFactory->create([
+            'trace' => $this->trace,
+        ])->render();
     }
 }

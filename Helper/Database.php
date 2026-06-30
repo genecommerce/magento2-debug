@@ -31,13 +31,14 @@ class Database
 
         $queries = [];
         /** @var \Zend_Db_Profiler_Query $query */
-        foreach ($queryProfiles as $query) {
+        foreach ($queryProfiles as $profileId => $query) {
             $queryId = $this->getQueryId($query);
             if (!isset($queries[$queryId])) {
                 $queries[$queryId] = [
                     'count'      => 0,
                     'total_time' => 0,
                     'query'      => $query,
+                    'profile_id' => $profileId,
                 ];
             }
             $queries[$queryId]['count']++;

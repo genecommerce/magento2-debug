@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace ClawRock\Debug\Model\Config\Database;
 
+use ClawRock\Debug\Model\Database\TraceProfiler;
 use Magento\Framework\Config\ConfigOptionsListConstants;
 use Magento\Framework\Config\File\ConfigFilePool;
-use Magento\Framework\DB\Profiler;
 
 class ProfilerWriter
 {
@@ -21,7 +21,7 @@ class ProfilerWriter
                 'connection' => [
                     'default' => [
                         'profiler' => [
-                            'class' => Profiler::class,
+                            'class' => TraceProfiler::class,
                             'enabled' => $flag,
                         ],
                     ],

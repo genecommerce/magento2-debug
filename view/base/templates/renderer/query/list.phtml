@@ -6,24 +6,37 @@ declare(strict_types=1);
  * @var \Magento\Framework\Escaper $escaper
  */
 $prefix = $block->getPrefix();
+$rowNumber = 0;
+$counts = $block->getCounts() ?? [];
 ?>
 <table class="alt queries-table">
     <thead>
         <tr>
             <th class="nowrap">#</th>
             <th class="nowrap"><?= $escaper->escapeHtml(__('Time')) ?></th>
+            <?php if ($counts): ?>
+                <th class="nowrap"><?= $escaper->escapeHtml(__('Count')) ?></th>
+            <?php endif; ?>
             <th style="width: 100%;"><?= $escaper->escapeHtml(__('Info')) ?></th>
         </tr>
     </thead>
     <tbody>
         <?php /** @var \Zend_Db_Profiler_Query $query */ ?>
-        <?php foreach ($block->getQueries() as $index => $query): ?>
+        <?php foreach ($block->getQueries() as $queryId => $query): ?>
             <tr>
-                <td class="nowrap"><?= /* @noEscape */ ++$index ?> </td>
+                <td class="nowrap"><?= /* @noEscape */ ++$rowNumber ?> </td>
                 <td class="nowrap">
                     <?= /* @noEscape */ $block->getFormatter()->microtime($query->getElapsedSecs()); ?> ms
                 </td>
-                <td><?= /* @noEscape */ $block->getQueryRenderer()->create(['query' => $query])->render(); ?></td>
+                <?php if ($counts): ?>
+                    <td class="nowrap"><?= /* @noEscape */ $counts[$queryId] ?? '-' ?></td>
+                <?php endif; ?>
+                <td>
+                    <?= /* @noEscape */ $block->getQueryRenderer()->create([
+                        'query' => $query,
+                        'trace' => $block->getTraces()[$queryId] ?? [],
+                    ])->render(); ?>
+                </td>
             </tr>
         <?php endforeach; ?>
     </tbody>

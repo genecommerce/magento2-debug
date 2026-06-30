@@ -81,7 +81,27 @@ class DatabaseCollector implements CollectorInterface
 
     public function getDuplicatedQueries(): array
     {
-        return array_column($this->dataCollector->getData(self::QUERIES)[DatabaseInfo::DUPLICATED_QUERIES], 'query');
+        $duplicatedQueries = [];
+        foreach ($this->dataCollector->getData(self::QUERIES)[DatabaseInfo::DUPLICATED_QUERIES] ?? [] as $query) {
+            $duplicatedQueries[$query['profile_id']] = $query['query'];
+        }
+
+        return $duplicatedQueries;
+    }
+
+    public function getDuplicatedQueryCounts(): array
+    {
+        $duplicatedQueryCounts = [];
+        foreach ($this->dataCollector->getData(self::QUERIES)[DatabaseInfo::DUPLICATED_QUERIES] ?? [] as $query) {
+            $duplicatedQueryCounts[$query['profile_id']] = $query['count'];
+        }
+
+        return $duplicatedQueryCounts;
+    }
+
+    public function getQueryTraces(): array
+    {
+        return $this->dataCollector->getData(self::QUERIES)[DatabaseInfo::QUERY_TRACES] ?? [];
     }
 
     public function isEnabled(): bool
