@@ -6,6 +6,7 @@ declare(strict_types=1);
  * @var \Magento\Framework\Escaper $escaper
  */
 $prefix = $block->getPrefix();
+$rowNumber = 0;
 ?>
 <table class="alt queries-table">
     <thead>
@@ -17,13 +18,18 @@ $prefix = $block->getPrefix();
     </thead>
     <tbody>
         <?php /** @var \Zend_Db_Profiler_Query $query */ ?>
-        <?php foreach ($block->getQueries() as $index => $query): ?>
+        <?php foreach ($block->getQueries() as $queryId => $query): ?>
             <tr>
-                <td class="nowrap"><?= /* @noEscape */ ++$index ?> </td>
+                <td class="nowrap"><?= /* @noEscape */ ++$rowNumber ?> </td>
                 <td class="nowrap">
                     <?= /* @noEscape */ $block->getFormatter()->microtime($query->getElapsedSecs()); ?> ms
                 </td>
-                <td><?= /* @noEscape */ $block->getQueryRenderer()->create(['query' => $query])->render(); ?></td>
+                <td>
+                    <?= /* @noEscape */ $block->getQueryRenderer()->create([
+                        'query' => $query,
+                        'trace' => $block->getTraces()[$queryId] ?? [],
+                    ])->render(); ?>
+                </td>
             </tr>
         <?php endforeach; ?>
     </tbody>

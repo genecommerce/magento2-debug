@@ -8,6 +8,7 @@ class DatabaseInfo
     public const PROFILE = 'profile';
     public const ALL_QUERIES = 'all';
     public const DUPLICATED_QUERIES = 'duplicated';
+    public const QUERY_TRACES = 'traces';
 
     private ?\Zend_Db_Profiler $profiler = null;
 
@@ -26,22 +27,27 @@ class DatabaseInfo
             \Zend_Db_Profiler::UPDATE => [],
             \Zend_Db_Profiler::DELETE => [],
             \Zend_Db_Profiler::QUERY => [],
+            self::QUERY_TRACES => [],
         ];
 
-        $queryProfiles = $this->getProfiler()->getQueryProfiles();
+        $profiler = $this->getProfiler();
+        $queryProfiles = $profiler->getQueryProfiles();
         if ($queryProfiles === false) {
             return $queries;
         }
 
         /** @var \Zend_Db_Profiler_Query $query */
-        foreach ($queryProfiles as $query) {
+        foreach ($queryProfiles as $queryId => $query) {
             $type = $query->getQueryType();
             if (!isset($queries[$type])) {
                 $type = \Zend_Db_Profiler::QUERY;
             }
-            $queries[$type][] = $query;
+            $queries[$type][$queryId] = $query;
 
-            $queries[self::ALL_QUERIES][] = $query;
+            $queries[self::ALL_QUERIES][$queryId] = $query;
+            if (method_exists($profiler, 'getQueryTrace')) {
+                $queries[self::QUERY_TRACES][$queryId] = $profiler->getQueryTrace($queryId);
+            }
         }
 
         $queries[self::DUPLICATED_QUERIES] = $this->databaseHelper->getDuplicatedQueries();

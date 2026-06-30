@@ -26,6 +26,7 @@ $query = $block->getQuery();
        data-toggle-alt-content="<?= $escaper->escapeHtml(__('Hide runnable query')) ?>">
         <?= $escaper->escapeHtml(__('View runnable query')) ?>
     </a>
+    <?= /* @noEscape */ $block->getTraceHtml(); ?>
 </div>
 <div id="formatted-query-<?= /* @noEscape */ $block->getUniqId() ?>" class="sql-runnable hidden">
     <?= /* @noEscape */ $block->getFormattedQuery(); ?>
