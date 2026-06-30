@@ -9,6 +9,8 @@ use ClawRock\Debug\Model\Info\CacheInfo;
 class CacheCollector implements CollectorInterface, LoggerCollectorInterface
 {
     public const NAME = 'cache';
+    public const CACHE_CALL_WARNING_THRESHOLD = 60;
+    public const CACHE_CALL_ERROR_THRESHOLD = 120;
 
     public const BACKEND_NAME    = 'backend_name';
     public const BACKEND_OPTIONS = 'backend_options';
@@ -84,6 +86,16 @@ class CacheCollector implements CollectorInterface, LoggerCollectorInterface
         return $this->getStats(CacheInfo::STATS_TOTAL);
     }
 
+    public function isWarningThresholdExceeded(): bool
+    {
+        return $this->getCacheCalls() > self::CACHE_CALL_WARNING_THRESHOLD;
+    }
+
+    public function isErrorThresholdExceeded(): bool
+    {
+        return $this->getCacheCalls() > self::CACHE_CALL_ERROR_THRESHOLD;
+    }
+
     public function getTotalTime(): string
     {
         return $this->formatter->microtime($this->dataCollector->getData(self::TOTAL_TIME) ?? 0);
@@ -139,6 +151,14 @@ class CacheCollector implements CollectorInterface, LoggerCollectorInterface
 
     public function getStatus(): string
     {
+        if ($this->isErrorThresholdExceeded()) {
+            return self::STATUS_ERROR;
+        }
+
+        if ($this->isWarningThresholdExceeded()) {
+            return self::STATUS_WARNING;
+        }
+
         return self::STATUS_DEFAULT;
     }
 
