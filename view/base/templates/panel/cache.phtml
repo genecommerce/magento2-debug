@@ -143,24 +143,30 @@ $collector = $block->getCollector();
 </table>
 
 <h2><?= $escaper->escapeHtml(__('Cache Calls')) ?></h2>
-<table>
+<table class="cache-calls-table">
     <thead>
         <tr>
             <th>#</th>
             <th><?= $escaper->escapeHtml(__('Action')) ?></th>
             <th style="width: 100%;">Id</th>
             <th><?= $escaper->escapeHtml(__('Hit')) ?></th>
+            <th><?= $escaper->escapeHtml(__('Size')) ?></th>
             <th><?= $escaper->escapeHtml(__('Time')) ?></th>
         </tr>
     </thead>
     <tbody>
         <?php /** @var \ClawRock\Debug\Model\ValueObject\CacheAction $action */ ?>
-        <?php foreach ($collector->getCacheLog() as $i => $action): ?>
+        <?php $rowNumber = 1; ?>
+        <?php foreach ($collector->getCacheLog() as $action): ?>
             <tr>
-                <td class="nowrap"><?= /* @noEscape */ ++$i ?> </td>
+                <td class="nowrap"><?= /* @noEscape */ $rowNumber++ ?> </td>
                 <td><?= /* @noEscape */ $action->getName() ?></td>
                 <td>
                     <?= /* @noEscape */ $action->getId() ?: '-' ?>
+                    <?php if ($action->getTrace()): ?>
+                        <br>
+                        <?= /* @noEscape */ $viewModel->renderTrace($action->getTrace()) ?>
+                    <?php endif; ?>
                     <?php if ($action->hasTags()): ?>
                         <br>
                         <small>
@@ -187,6 +193,13 @@ $collector = $block->getCollector();
                             " alt="<?= $escaper->escapeHtmlAttr(__('No')) ?>"/>
                         <?php endif; ?>
                     <?php endif ?>
+                </td>
+                <td class="nowrap">
+                    <?php if (!$action->isLoad() || $action->getSize() === null): ?>
+                        -
+                    <?php else: ?>
+                        <?= /* @noEscape */ $action->getSize() ?> B
+                    <?php endif; ?>
                 </td>
                 <td class="nowrap">
                     <?= /* @noEscape */ $viewModel->getFormatter()->microtime($action->getTime()) ?> ms

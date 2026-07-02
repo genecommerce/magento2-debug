@@ -10,6 +10,8 @@ class CacheCollectorPluginTest extends TestCase
 {
     /** @var \ClawRock\Debug\Model\Collector\CacheCollector&\PHPUnit\Framework\MockObject\MockObject */
     private \ClawRock\Debug\Model\Collector\CacheCollector $cacheCollectorMock;
+    /** @var \ClawRock\Debug\Helper\Debug&\PHPUnit\Framework\MockObject\MockObject */
+    private \ClawRock\Debug\Helper\Debug $debugMock;
     private \Closure $proceedMock;
     /** @var \Magento\Framework\App\Cache&\PHPUnit\Framework\MockObject\MockObject */
     private \Magento\Framework\App\Cache $subjectMock;
@@ -21,6 +23,10 @@ class CacheCollectorPluginTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
+        $this->debugMock = $this->getMockBuilder(\ClawRock\Debug\Helper\Debug::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $this->proceedMock = function () {
             return true;
         };
@@ -29,7 +35,7 @@ class CacheCollectorPluginTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->plugin = new CacheCollectorPlugin($this->cacheCollectorMock);
+        $this->plugin = new CacheCollectorPlugin($this->cacheCollectorMock, $this->debugMock);
     }
 
     public function testAroundLoad(): void

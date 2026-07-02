@@ -8,12 +8,21 @@ declare(strict_types=1);
  */
 $collector = $block->getCollector();
 ?>
-<div class="sf-toolbar-block sf-toolbar-block-<?= /* @noEscape */ $collector->getName() ?>">
+<div class="
+    sf-toolbar-block
+    sf-toolbar-block-<?= /* @noEscape */ $collector->getName() ?>
+    sf-toolbar-status-<?= /* @noEscape */ $collector->getStatus() ?>
+">
     <a target="_blank" href="<?= $escaper->escapeUrl($block->getProfilerUrl()); ?>">
         <div class="sf-toolbar-icon">
             <img src="<?= /* @noEscape */ $block->getViewFileUrl('ClawRock_Debug::images/collector/cache.svg'); ?>"
                  alt="<?= $escaper->escapeHtmlAttr(__('Cache')) ?>"/>
-            <span class="sf-toolbar-value"><?= /* @noEscape */ $collector->getTotalTime(); ?> ms</span>
+            <span class="sf-toolbar-value"><?= /* @noEscape */ $collector->getCacheCalls(); ?></span>
+            <span class="sf-toolbar-info-piece-additional-detail">
+                <span class="sf-toolbar-label"><?= $escaper->escapeHtml(__('in')); ?></span>
+                <span class="sf-toolbar-value"><?= /* @noEscape */ $collector->getTotalTime(); ?></span>
+                <span class="sf-toolbar-label">ms</span>
+            </span>
         </div>
     </a>
     <div class="sf-toolbar-info">
@@ -71,7 +80,12 @@ $collector = $block->getCollector();
         <div class="sf-toolbar-info-group" >
             <div class="sf-toolbar-info-piece">
                 <strong><?= $escaper->escapeHtml(__('Cache calls')); ?></strong>
-                <span class="sf-toolbar-status"><?= /* @noEscape */ $collector->getCacheCalls() ?></span>
+                <span class="
+                    sf-toolbar-status
+                    sf-toolbar-status-<?= /* @noEscape */ $collector->getStatus() ?>
+                ">
+                    <?= /* @noEscape */ $collector->getCacheCalls() ?>
+                </span>
             </div>
             <div class="sf-toolbar-info-piece">
                 <strong><?= $escaper->escapeHtml(__('Time')); ?></strong>

@@ -15,6 +15,8 @@ class CacheAction implements LoggableInterface
     public const CACHE_TAGS = 'tags';
     public const CACHE_TIME = 'time';
     public const CACHE_HIT = 'hit';
+    public const CACHE_SIZE = 'size';
+    public const CACHE_TRACE = 'trace';
     public const CACHE_TTL = 'ttl';
     public const CACHE_ACTION = 'action';
     public const CACHE_INFO = 'info';
@@ -60,6 +62,16 @@ class CacheAction implements LoggableInterface
     public function getTags(): array
     {
         return $this->info[self::CACHE_TAGS] ?? [];
+    }
+
+    public function getSize(): ?int
+    {
+        return $this->info[self::CACHE_SIZE] ?? null;
+    }
+
+    public function getTrace(): array
+    {
+        return $this->info[self::CACHE_TRACE] ?? [];
     }
 
     public function hasTags(): bool
