@@ -156,9 +156,10 @@ $collector = $block->getCollector();
     </thead>
     <tbody>
         <?php /** @var \ClawRock\Debug\Model\ValueObject\CacheAction $action */ ?>
-        <?php foreach ($collector->getCacheLog() as $i => $action): ?>
+        <?php $rowNumber = 1; ?>
+        <?php foreach ($collector->getCacheLog() as $action): ?>
             <tr>
-                <td class="nowrap"><?= /* @noEscape */ ++$i ?> </td>
+                <td class="nowrap"><?= /* @noEscape */ $rowNumber++ ?> </td>
                 <td><?= /* @noEscape */ $action->getName() ?></td>
                 <td>
                     <?= /* @noEscape */ $action->getId() ?: '-' ?>
