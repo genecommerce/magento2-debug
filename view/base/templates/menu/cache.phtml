@@ -9,9 +9,11 @@ declare(strict_types=1);
 $viewModel = $block->getViewModel();
 ?>
 <?php if ($viewModel->isActive($block->getCollectorName())): ?>
+    <?php /** @var \ClawRock\Debug\Model\Collector\CacheCollector $collector */ ?>
+    <?php $collector = $viewModel->getCollector($block->getCollectorName()); ?>
     <li class="request<?= $viewModel->isCurrentPanel($block->getCollectorName()) ? ' selected' : '' ?>">
         <a href="<?= $escaper->escapeUrl($viewModel->getProfilerUrl($block->getCollectorName())); ?>">
-            <span class="label">
+            <span class="label label-status-<?= /* @noEscape */ $collector->getStatus() ?>">
                 <span class="icon">
                     <img src="
                     <?= $escaper->escapeUrl(
@@ -20,6 +22,11 @@ $viewModel = $block->getViewModel();
                     " alt="<?= $escaper->escapeHtmlAttr(__('Cache')); ?>"/>
                 </span>
                 <strong><?= $escaper->escapeHtml(__('Cache')); ?></strong>
+                <?php if ($collector->getStatus() !== $collector::STATUS_DEFAULT): ?>
+                    <span class="count">
+                        <span><?= /* @noEscape */ $collector->getCacheCalls() ?></span>
+                    </span>
+                <?php endif; ?>
             </span>
         </a>
     </li>

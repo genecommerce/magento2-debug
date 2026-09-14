@@ -23,6 +23,11 @@ class EventCollectorPlugin
         array $configuration,
         Observer $observer
     ): void {
+        if (!isset($configuration['instance'])) {
+            $proceed($configuration, $observer);
+            return;
+        }
+    
         $start = microtime(true);
         $proceed($configuration, $observer);
         $end = microtime(true);

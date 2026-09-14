@@ -12,7 +12,8 @@ use Magento\Framework\App\Cache;
 class CacheCollectorPlugin
 {
     public function __construct(
-        private \ClawRock\Debug\Model\Collector\CacheCollector $cacheCollector
+        private \ClawRock\Debug\Model\Collector\CacheCollector $cacheCollector,
+        private \ClawRock\Debug\Helper\Debug $debug
     ) {
     }
 
@@ -29,6 +30,8 @@ class CacheCollectorPlugin
         $time = microtime(true) - $start;
         $this->cacheCollector->log(new CacheAction($identifier, CacheAction::LOAD, $time, [
             CacheAction::CACHE_HIT => ($result !== false),
+            CacheAction::CACHE_SIZE => $result !== false ? strlen($result) : null,
+            CacheAction::CACHE_TRACE => $this->debug->getBacktrace([CacheAction::LOAD], DEBUG_BACKTRACE_IGNORE_ARGS),
         ]));
 
         return $result;
@@ -51,6 +54,7 @@ class CacheCollectorPlugin
         $this->cacheCollector->log(new CacheAction($identifier, CacheAction::SAVE, $time, [
             CacheAction::CACHE_TAGS => $tags,
             CacheAction::CACHE_TTL => $lifeTime,
+            CacheAction::CACHE_TRACE => $this->debug->getBacktrace([CacheAction::SAVE], DEBUG_BACKTRACE_IGNORE_ARGS),
         ]));
 
         return $result;

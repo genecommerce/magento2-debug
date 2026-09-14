@@ -1313,6 +1313,10 @@ table.logs .sf-call-stack abbr {
     height: 16px;
 }
 
+.cache-calls-table {
+    min-width: 1400px;
+}
+
 @media (max-width: 768px) {
     #collector-content {
         margin-left: 50px;
