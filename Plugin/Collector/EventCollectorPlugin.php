@@ -23,11 +23,12 @@ class EventCollectorPlugin
         array $configuration,
         Observer $observer
     ): void {
-        if (!isset($configuration['instance'])) {
+        if (!empty($configuration['disabled']) || !isset($configuration['name'], $configuration['instance'])) {
             $proceed($configuration, $observer);
+
             return;
         }
-    
+
         $start = microtime(true);
         $proceed($configuration, $observer);
         $end = microtime(true);

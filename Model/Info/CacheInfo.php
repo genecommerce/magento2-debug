@@ -28,10 +28,13 @@ class CacheInfo
 
     public function getBackendOptions(): array
     {
-        $backendOptions = new \ReflectionProperty(\Zend_Cache_Backend::class, '_options');
-        $backendOptions->setAccessible(true);
+        $backend = $this->cache->getFrontend()->getBackend();
+        $reflection = new \ReflectionObject($backend);
+        if (!$reflection->hasProperty('_options')) {
+            return [];
+        }
 
-        return $backendOptions->getValue($this->cache->getFrontend()->getBackend());
+        return $reflection->getProperty('_options')->getValue($backend);
     }
 
     public function getCacheList(): array
