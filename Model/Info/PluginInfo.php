@@ -46,10 +46,8 @@ class PluginInfo
 
         $reflection = new \ReflectionClass($this->pluginList);
         $processed = $reflection->getProperty('_processed');
-        $processed->setAccessible(true);
         $processed = $processed->getValue($this->pluginList);
         $inherited = $reflection->getProperty('_inherited');
-        $inherited->setAccessible(true);
         $inherited = $inherited->getValue($this->pluginList);
         $definitionTypes = [
             DefinitionInterface::LISTENER_BEFORE => PluginCollector::BEFORE,
